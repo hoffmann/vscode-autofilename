@@ -9,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
     var completeProvider = new CompleteProvider();
     vscode.languages.getLanguages().then(data => console.log(data))
     var disposable = vscode.languages.registerCompletionItemProvider('*', 
-    completeProvider, '"', '\'', '/');
+    completeProvider, '[', '/');
 	context.subscriptions.push(disposable);
 }
 
@@ -36,9 +36,7 @@ class CompleteProvider implements vscode.CompletionItemProvider{
                             .filter(name => name[0] !== '.')
                             .map(name => {
                                 const extn = name.includes('.') ? name.substring(name.lastIndexOf('.') + 1) : ''
-                                if (extn !== '' && (extensions.get('trim') as Array<string>).some(item => item.localeCompare(extn, 'en', { sensitivity: 'accent' }) === 0)) {
-                                    name = name.substring(0, name.lastIndexOf('.js'));
-                                }
+                                name = name.substring(0, name.lastIndexOf('.md'));
                                 const item = new vscode.CompletionItem(name);
                                 item.kind = vscode.CompletionItemKind.File;
                                 return item;
